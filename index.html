@@ -523,7 +523,7 @@ html.is-locked body{overflow:hidden}
 
 </main>
 
-<audio id="song" loop preload="metadata" playsinline src="song.mp3"></audio>
+<audio id="song" loop preload="auto" playsinline src="song.mp3"></audio>
 
 <script>
 (function(){
@@ -754,6 +754,26 @@ html.is-locked body{overflow:hidden}
     fadeRaf = requestAnimationFrame(tick);
   }
 
+  /* 音频断流 / 被系统暂停时自动续播 */
+  var wantSound = false;
+  function resumeMusic(){
+    if (!wantSound || !song.paused) return;
+    var v = Math.max(song.volume, CONFIG.musicVolume);
+    var pr = song.play();
+    if (pr && pr.catch) pr.catch(function(){});
+    song.volume = v;
+  }
+  song.addEventListener("stalled", function(){ setTimeout(resumeMusic, 600); });
+  song.addEventListener("canplay", resumeMusic);
+  song.addEventListener("canplaythrough", resumeMusic);
+  song.addEventListener("ended", resumeMusic);
+  song.addEventListener("pause", function(){ if (wantSound) setTimeout(resumeMusic, 500); });
+  doc.addEventListener("visibilitychange", function(){ if (!doc.hidden) setTimeout(resumeMusic, 300); });
+  song.addEventListener("error", function(){
+    if (!wantSound) return;
+    setTimeout(function(){ try{ song.load(); song.play(); }catch(e){} }, 800);
+  });
+
   /* 浏览器拦下自动播放时，等下一次任意点击再试 */
   function armGestureRetry(){
     var once = function(){
@@ -764,6 +784,7 @@ html.is-locked body{overflow:hidden}
   }
 
   function setSound(on){
+    wantSound = on;
     soundBtn.setAttribute("aria-checked", on ? "true" : "false");
     if (on){
       song.volume = 0;
