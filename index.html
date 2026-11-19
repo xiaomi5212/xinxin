@@ -27,10 +27,10 @@
 <html lang="zh-CN" class="is-locked">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF9F4">
-<title>给丽丽的一封信</title>
-<meta name="description" content="给丽丽的一封信。">
+<title>&#8203;</title>
+<meta name="description" content="一点小心意，点开看看。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFF3EC'/%3E%3Ccircle cx='16' cy='15' r='4' fill='%23C4695F'/%3E%3C/svg%3E">
 <style>
 /* ============ 基础 ============ */
@@ -52,7 +52,7 @@ body{
   background:#FDF2EB;
   font-family:var(--serif);
   line-height:1.9;letter-spacing:.02em;
-  overflow-x:hidden;
+  overflow-x:clip;max-width:100vw;
   -webkit-font-smoothing:antialiased;
 }
 body::before{
@@ -93,10 +93,10 @@ canvas#burst{position:fixed;inset:0;z-index:7;pointer-events:none}
 
 /* ============ 场景容器 ============ */
 main{position:relative;z-index:3}
-html{scroll-snap-type:y proximity;overscroll-behavior-y:contain;touch-action:manipulation}
+html{overscroll-behavior:contain;touch-action:pan-y pinch-zoom;-webkit-text-size-adjust:100%;width:100%;overflow-x:hidden}
 .scene{position:relative;min-height:100vh;min-height:100svh;
   padding:96px 26px calc(96px + env(safe-area-inset-bottom));
-  display:grid;place-items:center;scroll-snap-align:start}
+  display:grid;place-items:center}
 .scene-inner{width:100%;max-width:560px;margin:0 auto}
 
 /* ============ 首屏 ============ */
@@ -159,10 +159,9 @@ html{scroll-snap-type:y proximity;overscroll-behavior-y:contain;touch-action:man
 /* ============ 场景：逐字点亮 ============ */
 .light-scene{padding-top:14vh;padding-bottom:14vh}
 .reveal-text{
-  font-size:clamp(22px,6.4vw,34px);
-  line-height:1.95;letter-spacing:.05em;
-  color:var(--paper);
-  margin:0;
+  font-size:15.5px;line-height:2.05;letter-spacing:.08em;
+  max-width:25em;margin:0 auto;text-align:center;text-wrap:balance;
+  color:rgba(66,37,35,.62);
 }
 .js .reveal-text .ch{opacity:.16;transition:opacity .55s ease,color .55s ease,text-shadow .55s ease}
 .js .reveal-text .ch.on{opacity:1;color:#2E1B19;text-shadow:0 0 20px rgba(214,132,112,.30)}
@@ -194,7 +193,7 @@ html{scroll-snap-type:y proximity;overscroll-behavior-y:contain;touch-action:man
 .days.in .scrub{transform:scaleX(1)}
 
 /* ============ 场景：信 ============ */
-.letter-wrap{display:grid;place-items:center;scroll-snap-align:none;
+.letter-wrap{display:grid;place-items:center;
   padding:26px 24px calc(30px + env(safe-area-inset-bottom));
   min-height:100vh;min-height:100svh}
 .paper{
@@ -217,6 +216,8 @@ html{scroll-snap-type:y proximity;overscroll-behavior-y:contain;touch-action:man
   font-family:var(--mono);font-size:10px;letter-spacing:.26em;
   color:rgba(59,34,32,.42);margin:0 0 30px;
 }
+.paper p[data-para]{text-indent:2em}
+.paper p.sal{text-indent:0}
 .paper p{
   margin:0 0 20px;font-size:15.5px;line-height:2.2;
   letter-spacing:.04em;color:var(--ink);
@@ -262,13 +263,26 @@ html{scroll-snap-type:y proximity;overscroll-behavior-y:contain;touch-action:man
 .heart-stage.boom .heart{opacity:0;transition:opacity .3s ease}
 .heart-stage.boom{transform:scale(1.5);opacity:0;pointer-events:none;
   transition:transform .42s cubic-bezier(.3,0,.65,1),opacity .34s ease}
-.tap-hint{
-  margin-top:16px;font-size:12px;letter-spacing:.3em;text-indent:.3em;white-space:nowrap;
-  color:rgba(196,105,95,.95);opacity:0;transition:opacity .4s ease;
+.tap-finger{
+  position:absolute;top:-34px;left:50%;margin-left:-11px;
+  opacity:0;transition:opacity .4s ease;pointer-events:none;
+  filter:drop-shadow(0 3px 6px rgba(196,105,95,.35));
 }
-.tap-hint.show{opacity:1;animation:hintBlink 2.2s ease-in-out infinite}
-@keyframes hintBlink{0%,100%{opacity:.5}50%{opacity:1}}
+.tap-finger svg{display:block;filter:drop-shadow(0 3px 7px rgba(224,34,26,.30))}
+.tap-finger.show{opacity:1;animation:fingerBob 1.35s ease-in-out infinite}
+@keyframes fingerBob{0%,100%{transform:translateY(-6px)}50%{transform:translateY(7px)}}
+.tap-hint{
+  margin-top:18px;font-size:17px;letter-spacing:.16em;text-indent:.16em;white-space:nowrap;
+  color:#E0221A;font-weight:800;opacity:0;transition:opacity .4s ease;
+  padding:8px 20px;border-radius:999px;
+  background:rgba(224,34,26,.09);
+  box-shadow:0 0 0 1.5px rgba(224,34,26,.32),0 8px 20px rgba(224,34,26,.14);
+}
+.tap-hint.show{opacity:1;animation:hintBlink 1.5s ease-in-out infinite}
+@keyframes hintBlink{0%,100%{opacity:.78}50%{opacity:1}}
 @keyframes beat{0%,100%{transform:scale(1)}18%{transform:scale(1.09)}36%{transform:scale(1)}54%{transform:scale(1.05)}}
+.end p,.end .foot{transition:opacity .6s ease}
+.end.gathered p,.end.gathered .foot{opacity:0}
 .end p{margin:0 auto;max-width:16em;font-size:clamp(19px,5.4vw,25px);
   line-height:2;letter-spacing:.08em;color:var(--paper)}
 .end .again{
@@ -309,7 +323,7 @@ html.is-locked body{overflow:hidden}
 @keyframes gateShake{0%,100%{transform:translateX(0)}22%{transform:translateX(-7px)}44%{transform:translateX(6px)}70%{transform:translateX(-3px)}}
 .gate-card{
   width:min(352px,100%);text-align:center;background:#FFFCF9;
-  border-radius:14px;padding:40px 30px 30px;
+  border-radius:14px;padding:44px 30px 34px;
   box-shadow:0 30px 64px rgba(150,86,70,.18),0 0 0 1px rgba(196,105,95,.14);
   animation:gateIn .9s cubic-bezier(.22,1,.36,1) both;
 }
@@ -343,6 +357,7 @@ html.is-locked body{overflow:hidden}
   .letter-wrap{padding:14px 12px calc(18px + env(safe-area-inset-bottom))}
   .paper{padding:40px 26px 38px;border-radius:8px;transform:none}
   .paper p{font-size:15px;line-height:2.05}
+  .reveal-text{font-size:15px;line-height:2.05}
   .paper .head{margin-bottom:24px}
   .paper .sign{margin-top:28px}
   .skip{right:12px;bottom:8px;padding:10px 12px}
@@ -355,6 +370,22 @@ html.is-locked body{overflow:hidden}
   .gate-card{padding:34px 26px 28px;border-radius:12px}
   .gate-t{font-size:28px}
   .gate-btn{padding:14px 42px}
+}
+@media(max-width:430px){
+  .scene{padding:52px 16px calc(56px + env(safe-area-inset-bottom))}
+  .letter-wrap{padding:8px 6px calc(12px + env(safe-area-inset-bottom))}
+  .paper{padding:34px 20px 32px;border-radius:6px}
+  .paper p{font-size:16px;line-height:2}
+  .reveal-text{font-size:16px;line-height:2}
+  .paper .head{font-size:11px;margin-bottom:22px}
+  .paper .sign{font-size:15px;margin-top:26px}
+  .hero h1{font-size:clamp(32px,11.5vw,52px);letter-spacing:.06em}
+  .hero .sub{font-size:15px}
+  .gate-card{width:calc(100vw - 28px);max-width:360px;padding:32px 22px 26px}
+  .gate-t{font-size:26px;letter-spacing:.18em}
+  .gate-field input{font-size:26px}
+  .end p{font-size:18px}
+  .end .foot{font-size:10px;letter-spacing:.14em}
 }
 @media(min-width:768px){
   .scene{padding:110px 40px}
@@ -372,16 +403,14 @@ html.is-locked body{overflow:hidden}
 <body>
 
 
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="请输入访问口令">
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="password">
   <div class="gate-card">
-    <p class="gate-k">PRIVATE · 只给你</p>
-    <h2 class="gate-t">密语</h2>
-    <p class="gate-s">请输入口令</p>
+    <p class="gate-s">password</p>
     <label class="gate-field">
       <input id="pass" type="password" inputmode="numeric" autocomplete="off"
              enterkeyhint="go" maxlength="8" placeholder="· · · · · · · ·" aria-label="访问口令">
     </label>
-    <button class="gate-btn" id="enter" type="button">打 开</button>
+    <button class="gate-btn" id="enter" type="button">GO</button>
     <p class="gate-err" id="gateErr" role="alert"></p>
   </div>
 </div>
@@ -404,7 +433,6 @@ html.is-locked body{overflow:hidden}
 
   <!-- ===== 首屏 ===== -->
   <section class="scene hero">
-    <span class="star" aria-hidden="true"></span>
     <div class="scene-inner">
       <p class="meta" id="meta">2026 · 十一月</p>
       <h1 id="title">给丽丽的一封信</h1>
@@ -426,7 +454,7 @@ html.is-locked body{overflow:hidden}
   <!-- ===== 逐字点亮 ===== -->
   <section class="scene light-scene">
     <div class="scene-inner">
-      <p class="reveal-text" id="lightText">我们相隔万里之遥，你身处异国他乡，想送你什么都无法实现，于是我想，就给你写一封信吧。</p>
+      <p class="reveal-text" id="lightText">我们相隔万里之遥，你身处异国他乡，<br>想送你什么都无法实现，<br>于是我想，就给你写一封信吧。</p>
     </div>
   </section>
 
@@ -444,22 +472,27 @@ html.is-locked body{overflow:hidden}
   <section class="scene letter-wrap">
     <div class="paper" id="paper">
       <p class="head">LETTER · NO.01</p>
-      <p data-para>吾生挚爱：</p>
+      <p class="sal" data-para>吾生挚爱：</p>
       <p data-para>见字如面，这既是一封情书，也是我内心想对你说的话，你要慢慢地、耐心地看哦。</p>
-      <p data-para>丽丽，我们初相识的时候，你才20岁，我们在网上好像是聊了一个月才正式见面，那时的你扎着简单的马尾、齐刘海，还没进入社会的你有点萌萌的。第一次见你，就对你心动不已，后来我们就自然的在一起啦。</p>
-      <p data-para>跟你在一起的每一天都是甜蜜和幸福，虽然你偶尔也会对我发些小脾气，在我看来这都是男朋友应该做的啊，就是要接受你的所有情绪啊，包括喜怒哀乐。</p>
-      <p data-para>你对我的好，都是融入在相处的每一天中，虽然你老是说你不记得怎么对我好，可是我就是觉得你对我很好啊，你对我的感情非常真诚。我们相聚的时间不多，但是每次我都记得清清楚楚，即使过去十几年，我也依然记得，因为你是刻在我心里的人，烙印在骨子里的人。</p>
-      <p data-para>我们俩的感情就好像一本书，前面部分每一页纸都是写的满满的，中间部分突然出现了14页的空白，那是我们彼此消失的14年，终于在2026年的时候，这本书又重新开始写上了文字，我们的感情还在继续。</p>
+      <p data-para>丽丽，我们初相识的时候，你才20岁，我们在网上好像是聊了一个月才正式见面。</p>
+      <p data-para>那时的你扎着简单的马尾、齐刘海，还没进入社会的你有点萌萌的。</p>
+      <p data-para>第一次见你，就对你心动不已，后来我们就自然的在一起啦。</p>
+      <p data-para>跟你在一起的每一天都是甜蜜和幸福，虽然你偶尔也会对我发些小脾气，在我看来这都是男朋友应该做的啊，就是要接受你的所有情绪啊，包括喜怒哀乐。就是对你格外的偏爱啊，包容你的所有小脾气和你自己认为的不完美的地方。</p>
+      <p data-para>在我这里，你可以随意的任性、撒娇，就做最真实的你，不用担心你做什么会让我生气，因为我对你完全生不起来气啊。</p>
+      <p data-para>你对我的好，都是融入在相处的每一天中，虽然你老是说你不记得怎么对我好，可是我就是觉得你对我很好啊，因为你对我的感情非常真诚，你的心里、眼里都是我，这就是我最大的满足啊。</p>
+      <p data-para>虽然我们相聚的时间不多，但是每次我都记得清清楚楚，即使过去十几年，我也依然记得，因为你是刻在我心里的人，烙印在骨子里的人。</p>
+      <p data-para>我们俩的感情就好像一本书，前面部分每一页纸都是写的满满的，中间部分突然出现了14页的空白，那是我们彼此消失的14年。终于在2026年的时候，这本书又重新开始写上了文字，我们的感情还在继续。</p>
       <p data-para>可即使14年我们没有一个字的消息，也并没有显得很陌生，还是那么自然的说话聊天，就好像我们从未分开过。</p>
       <p data-para>写这些话的时候，回想这我们的点点滴滴，已经记不清几次停下来擦眼泪了，就是哭的写不下去。</p>
       <p data-para>现在每天早上醒来第一件事就是要给你发消息，从醒来的那一刻开始，就时刻在惦记你。</p>
       <p data-para>我喜欢把生活的琐碎和日常的点滴都分享给你，让你感觉我们其实相隔并不远，因为你是我生活中最想倾述、最想陪伴、最想分享的那个人，这些碎碎念的小事就是代表着我对你的爱和思念。你在我心里的重要程度，没有人可以相比。</p>
       <p data-para>我非常珍惜这份来之不易的重逢，珍惜你在的每一天。未来会发生什么事，我无法知道，但是我确定知道的一件事就是，不管未来会发生什么，我都要一直陪着你，坚定不移，不离不弃。不会因为时间久了就变淡，更不会因为前路未知而放手。</p>
-      <p data-para>在你低谷时，陪你走过风风雨雨。在你走向阳光时，陪你欣赏一路的美好。</p>
+      <p data-para>在你低谷时，陪你走过风风雨雨。在你走向阳光时，陪你欣赏一路的美好。即使不能见面，也不能朝夕相伴，但只要你呼唤我，我都会马上给你做出回应。</p>
       <p data-para>还有很多话要说，很多很多，这些话就留下以后的日子再慢慢说啦。</p>
       <p data-para>我们相识于你的20岁，但我错过了你的30岁，所以我不想再错过你的40岁、50岁，一直到七八十岁我都不愿意再错过。</p>
       <p data-para>今天是我们重逢的第100天，后面还会有第一千天，第一万天。每一天都有你陪伴，每一天都是充满爱。</p>
-      <p data-para>你是我此生的挚爱，丽丽。</p>
+      <p data-para>我都快有20年没有写过这么多文字了，也许文笔一点都不好，但一字一句都是我心里最想跟你说的。</p>
+      <p data-para>你就是我此生的挚爱，丽丽，重新拥有你真好。</p>
       <p class="sign" data-sign>—— 你的臭浩</p>
       <button class="skip" id="skip" type="button">跳过</button>
     </div>
@@ -474,7 +507,13 @@ html.is-locked body{overflow:hidden}
             <path d="M12 20.4S3.6 15.2 3.6 9.3a4.6 4.6 0 0 1 8.4-2.6 4.6 4.6 0 0 1 8.4 2.6c0 5.9-8.4 11.1-8.4 11.1z" fill="#C4695F" opacity=".92"/>
           </svg>
         </div>
-        <span class="tap-hint" id="tapHint">点击</span>
+        <span class="tap-finger" id="tapFinger" aria-hidden="true">
+          <svg viewBox="0 0 24 34" width="22" height="31" focusable="false">
+            <path d="M12 3.2v22.6" stroke="#E0221A" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M4.6 18.6 12 27.4 19.4 18.6" fill="none" stroke="#E0221A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="tap-hint" id="tapHint">点击一下</span>
       </div>
       <p>信到这里。<br>但日子还长。</p>
       <button class="again" id="again" type="button">再 读 一 遍</button>
@@ -517,8 +556,8 @@ html.is-locked body{overflow:hidden}
     var html = start.getFullYear() + "." + '<b>' + pad(start.getMonth()+1) + "</b>." + pad(start.getDate());
     doc.getElementById("startDate").innerHTML = html;
 
-    var days = Math.max(1, Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(start.getFullYear(), start.getMonth(), start.getDate())) / 86400000) + 1);
-    doc.getElementById("daysNum").textContent = days;   // 直接给最终值，不滚动
+    var days = 100;   // 固定显示：重逢第 100 天
+    doc.getElementById("daysNum").textContent = days;
   })();
 
   /* ---------- 首屏标题逐字升起 ---------- */
@@ -538,10 +577,12 @@ html.is-locked body{overflow:hidden}
   var lightP = doc.getElementById("lightText");
   var chars = [];
   (function(){
-    var text = lightP.textContent.trim();
-    lightP.innerHTML = text.split("").map(function(c){
-      return '<span class="ch">' + (c === " " ? "&nbsp;" : c) + "</span>";
-    }).join("");
+    var lines = lightP.innerHTML.trim().split(/<br\s*\/?>/i);
+    lightP.innerHTML = lines.map(function(line){
+      return line.split("").map(function(c){
+        return '<span class="ch">' + (c === " " ? "&nbsp;" : c) + "</span>";
+      }).join("");
+    }).join("<br>");
     chars = Array.prototype.slice.call(lightP.querySelectorAll(".ch"));
   })();
 
@@ -840,9 +881,12 @@ html.is-locked body{overflow:hidden}
   var heartStage = doc.getElementById("heartStage");
   var heartSvg = doc.getElementById("heart");
   var tapHint = doc.getElementById("tapHint");
+  var tapFinger = doc.getElementById("tapFinger");
   var flashEl = doc.getElementById("flash");
   var grown = false, boom = false, growRaf = null, boomRaf = null;
   var boomParts = [], boomStart = 0, lastBoomT = 0, boomCx = 0, boomCy = 0;
+  var gTargets = null, gGeom = null, gDone = false, endVisible = true, gSprite = null, gScroll0 = 0;
+  var endScene = doc.getElementById("end");
 
   /* 一进到结尾这一屏，心和「点击」立刻出现，不用等 */
   function growHeart(){
@@ -850,6 +894,7 @@ html.is-locked body{overflow:hidden}
     grown = true;
     heartStage.classList.add("ready");
     tapHint.classList.add("show");
+    if (tapFinger) tapFinger.classList.add("show");
   }
 
   function startBurst(){
@@ -857,6 +902,7 @@ html.is-locked body{overflow:hidden}
     boom = true;
     if (growRaf){ cancelAnimationFrame(growRaf); growRaf = null; }
     tapHint.classList.remove("show");
+    if (tapFinger) tapFinger.classList.remove("show");
     var r = heartSvg.getBoundingClientRect();
     boomCx = (r.left + r.width / 2) * dpr;
     boomCy = (r.top + r.height / 2) * dpr;
@@ -908,6 +954,158 @@ html.is-locked body{overflow:hidden}
     boomRaf = requestAnimationFrame(boomLoop);
   }
 
+
+  /* ---------- 炸裂后：碎片聚拢成字 ---------- */
+  var G_FONT = '"Songti SC","Source Han Serif SC","Noto Serif CJK SC",serif';
+  var GATHER_AT = 1.55, GATHER_DUR = 1.15;
+
+  function gatherLayout(){
+    var limit = Math.min(bw - 26 * dpr, win.innerWidth * dpr * .88);
+    var n1 = Math.min(limit / 8.0, 40 * dpr);
+    var n2 = n1 * .58;
+    bctx.save();
+    bctx.font = '600 ' + n1 + 'px ' + G_FONT;
+    var w1 = bctx.measureText("鄢德丽").width;
+    var w2 = bctx.measureText("陈志浩").width;
+    bctx.font = '500 ' + n2 + 'px ' + G_FONT;
+    var w3 = bctx.measureText("此生再不要分开").width;
+    bctx.restore();
+    var heartW = n1 * .82, gap = n1 * .12;
+    var line1W = w1 + gap + heartW + gap + w2;
+    var pad = n1 * .7;
+    return { n1:n1, n2:n2, w1:w1, w2:w2, w3:w3, heartW:heartW, gap:gap,
+             line1W:line1W, pad:pad,
+             ow:Math.ceil(line1W + pad * 2),
+             oh:Math.ceil(pad * 2 + n1 * 2 + n2 * .3),
+             y1:pad + n1, y2:pad + n1 + n1 * .92 };
+  }
+
+  function paintGather(c, g, color){
+    c.textBaseline = "alphabetic";
+    c.textAlign = "left";
+    c.fillStyle = color;
+    c.font = '600 ' + g.n1 + 'px ' + G_FONT;
+    c.fillText("鄢德丽", 0, g.y1);
+    heartShape(c, g.w1 + g.gap + g.heartW / 2, g.y1 - g.n1 * .74, g.n1 * .50);
+    c.fillStyle = color;
+    c.fill();
+    c.fillStyle = color;
+    c.fillText("陈志浩", g.w1 + g.gap + g.heartW + g.gap, g.y1);
+    c.font = '500 ' + g.n2 + 'px ' + G_FONT;
+    c.fillText("此生再不要分开", (g.line1W - g.w3) / 2, g.y2);
+  }
+
+  function buildGatherTargets(){
+    var g = gatherLayout();
+    gGeom = g;
+    var off = doc.createElement("canvas");
+    off.width = g.ow; off.height = g.oh;
+    var oc = off.getContext("2d");
+    oc.clearRect(0, 0, g.ow, g.oh);
+    paintGather(oc, g, "#fff");
+    var data = oc.getImageData(0, 0, g.ow, g.oh).data;
+    var step = Math.max(2, Math.round(3.2 * dpr));
+    var pts = [];
+    for (var y = 0; y < g.oh; y += step){
+      for (var x = 0; x < g.ow; x += step){
+        if (data[(y * g.ow + x) * 4 + 3] > 120){
+          pts.push({ x: x, y: y });
+        }
+      }
+    }
+    var bx = Math.round((bw - g.ow) / 2);
+    var er = endScene ? endScene.getBoundingClientRect() : null;
+    var by = Math.round((er ? er.top + er.height / 2 : bh / 2) - g.oh / 2);
+    gScroll0 = Math.round(win.pageYOffset || win.scrollY || 0);
+    g.bx = bx; g.by = by;
+    gTargets = [];
+    for (var i = 0; i < pts.length; i++){
+      gTargets.push({ x: bx + pts[i].x, y: by + pts[i].y });
+    }
+    for (var j = 0; j < boomParts.length; j++){
+      var p = boomParts[j];
+      if (p.gx0 === undefined){ p.gx0 = p.x; p.gy0 = p.y; }
+      var t = gTargets[Math.floor(j * gTargets.length / boomParts.length) % gTargets.length];
+      p.tx = t.x + (Math.random() - .5) * 2 * dpr;
+      p.ty = t.y + (Math.random() - .5) * 2 * dpr;
+    }
+  }
+
+  function beatScale(t){
+    var T = 1.5, p = (t % T) / T;
+    var a = Math.exp(-Math.pow((p - .06) / .058, 2));
+    var b = .70 * Math.exp(-Math.pow((p - .26) / .075, 2));
+    return 1 + .062 * a + .062 * b;
+  }
+
+  function drawGather(el){
+    if (!gTargets) buildGatherTargets();
+    var g = Math.min(1, (el - GATHER_AT) / GATHER_DUR);
+    var e = 1 - Math.pow(1 - g, 3);
+    /* 随页面滚动整体位移：文字钉在结尾这一页，滑走就跟着走 */
+    var sc = win.pageYOffset || win.scrollY || 0;
+    bctx.save();
+    bctx.translate(0, (gScroll0 - sc) * dpr);
+
+    /* 飞行的碎片 */
+    var flyA = Math.max(0, 1 - Math.max(0, (g - .68) / .32)) * .9;
+    for (var i = 0; i < boomParts.length; i++){
+      var p = boomParts[i];
+      var x = p.gx0 + (p.tx - p.gx0) * e;
+      var y = p.gy0 + (p.ty - p.gy0) * e;
+      var r = Math.max(1, p.s * .3 * (1 - g * .35));
+      bctx.beginPath();
+      bctx.arc(x, y, r, 0, Math.PI * 2);
+      bctx.fillStyle = "rgba(" + p.col + "," + flyA.toFixed(3) + ")";
+      bctx.fill();
+    }
+
+    /* 目标点渐显，补满空隙 */
+    var dotA = Math.min(1, Math.max(0, (g - .15) / .55)) * .62 * Math.max(0, 1 - Math.max(0, (g - .86) / .14));
+    if (dotA > .02){
+      for (var k = 0; k < gTargets.length; k++){
+        var t = gTargets[k];
+        bctx.beginPath();
+        bctx.arc(t.x, t.y, 1.5 * dpr, 0, Math.PI * 2);
+        bctx.fillStyle = "rgba(198,106,99," + dotA.toFixed(3) + ")";
+        bctx.fill();
+      }
+    }
+
+    /* 清晰文字最后浮现 */
+    var ta = Math.max(0, Math.min(1, (g - .88) / .12));
+    if (g < 1 && ta > 0 && gGeom){
+      bctx.save();
+      bctx.translate(gGeom.bx, gGeom.by);
+      bctx.globalAlpha = ta;
+      bctx.shadowColor = "rgba(196,105,95,.45)";
+      bctx.shadowBlur = 22 * dpr;
+      paintGather(bctx, gGeom, "#B0463B");
+      bctx.restore();
+    }
+
+    /* 成型后像心跳一样一收一放（用离屏贴图缩放，省开销） */
+    if (g >= 1){
+      gDone = true;
+      if (!gGeom){ bctx.restore(); return; }
+      if (!gSprite){
+        gSprite = doc.createElement("canvas");
+        gSprite.width = gGeom.ow; gSprite.height = gGeom.oh;
+        var sc = gSprite.getContext("2d");
+        sc.shadowColor = "rgba(196,105,95,.42)";
+        sc.shadowBlur = 20 * dpr;
+        paintGather(sc, gGeom, "#B0463B");
+      }
+      var beat = beatScale(el - GATHER_AT - GATHER_DUR);
+      var dw = gGeom.ow * beat, dh = gGeom.oh * beat;
+      bctx.drawImage(gSprite,
+        gGeom.bx - (dw - gGeom.ow) / 2,
+        gGeom.by - (dh - gGeom.oh) / 2,
+        dw, dh);
+    }
+    bctx.restore();
+  }
+
   function boomLoop(t){
     if (!bctx) return;
     var dt = Math.max(0, Math.min(.05, (t - lastBoomT) / 1000));
@@ -927,6 +1125,17 @@ html.is-locked body{overflow:hidden}
         bctx.lineWidth = Math.max(1, (ri === 0 ? 2.6 : 1.6) * dpr * (1 - re));
         bctx.stroke();
       }
+    }
+
+    /* 聚拢成字阶段 */
+    if (el > GATHER_AT){
+      if (endScene && !endScene.classList.contains("gathered")) endScene.classList.add("gathered");
+      drawGather(el);
+      var erNow = endScene ? endScene.getBoundingClientRect() : null;
+      var vis = !erNow || (erNow.bottom > 60 && erNow.top < bh / dpr - 60);
+      if (gDone && !vis){ bctx.clearRect(0, 0, bw, bh); return; }
+      boomRaf = requestAnimationFrame(boomLoop);
+      return;
     }
 
     var alive = false;
@@ -991,13 +1200,36 @@ html.is-locked body{overflow:hidden}
     if (bctx) bctx.clearRect(0, 0, bw, bh);
     if (flashEl) flashEl.classList.remove("on");
     boomParts = [];
+    gTargets = null; gGeom = null; gDone = false; gSprite = null; gScroll0 = 0;
+    if (endScene) endScene.classList.remove("gathered");
     heartStage.classList.remove("boom", "ready");
     tapHint.classList.remove("show");
+    if (tapFinger) tapFinger.classList.remove("show");
   }
 
   if ("IntersectionObserver" in win){
+    win.addEventListener("scroll", function(){
+      if (!gDone || boomRaf || !endScene) return;
+      var r = endScene.getBoundingClientRect();
+      if (r.bottom > 60 && r.top < win.innerHeight - 60){
+        lastBoomT = 0;
+        boomStart = (win.performance ? win.performance.now() : Date.now()) - (GATHER_AT + GATHER_DUR + .2) * 1000;
+        boomRaf = requestAnimationFrame(boomLoop);
+      }
+    }, { passive: true });
+
     new IntersectionObserver(function(es){
-      es.forEach(function(e){ if (e.isIntersecting) growHeart(); });
+      es.forEach(function(e){
+        endVisible = e.isIntersecting;
+        if (e.isIntersecting){
+          growHeart();
+          if (gDone && !boomRaf){
+            lastBoomT = 0;
+            boomStart = (win.performance ? win.performance.now() : Date.now()) - (GATHER_AT + GATHER_DUR + .2) * 1000;
+            boomRaf = requestAnimationFrame(boomLoop);
+          }
+        }
+      });
     }, { threshold:.3 }).observe(doc.getElementById("end"));
   } else {
     growHeart();
@@ -1053,23 +1285,7 @@ html.is-locked body{overflow:hidden}
     setTimeout(function(){ paging = false; }, 700);
   }
 
-  /* 手机交给系统原生滑动 + CSS 吸附；鼠标/触控板才做整页跳转 */
-  var finePointer = win.matchMedia ? win.matchMedia("(hover:hover) and (pointer:fine)") : null;
-  win.addEventListener("wheel", function(e){
-    if (finePointer && !finePointer.matches) return;
-    if (doc.documentElement.classList.contains("is-locked")) return;
-    if (Math.abs(e.deltaY) < 6) return;
-    e.preventDefault();
-    goPage(e.deltaY > 0 ? 1 : -1);
-  }, { passive: false });
-
-  win.addEventListener("keydown", function(e){
-    if (doc.documentElement.classList.contains("is-locked")) return;
-    var tag = (e.target && e.target.tagName) || "";
-    if (tag === "INPUT" || tag === "TEXTAREA") return;
-    if (e.key === "PageDown" || e.key === "ArrowDown"){ e.preventDefault(); goPage(1); }
-    else if (e.key === "PageUp" || e.key === "ArrowUp"){ e.preventDefault(); goPage(-1); }
-  });
+  /* 全部交给系统原生滚动，不做整页跳转 */
 
   win.addEventListener("resize", function(){ buildSnaps(); });
   win.addEventListener("load", function(){ buildSnaps(); });
